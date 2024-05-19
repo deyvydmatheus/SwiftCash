@@ -3,6 +3,7 @@ package com.example.SwiftCash.model;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
@@ -20,6 +21,8 @@ public class User {
     @NotNull
     private String email;
 
+    private BigDecimal balance = BigDecimal.ZERO;
+
     @ElementCollection
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "users_id"))
     @Column(name = "role")
@@ -30,12 +33,13 @@ public class User {
 
     public User(){}
 
-    public User(Long id, String name, String password, String email, Set<String> roles) {
+    public User(Long id, String name, String password, String email, Set<String> roles, BigDecimal balance) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.email = email;
         this.roles = roles;
+        this.balance = balance;
     }
 
     public User(String name, String password, String email) {
@@ -76,17 +80,22 @@ public class User {
         this.email = email;
     }
 
-    public Set<String> getRoles() {
-        return roles;
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(roles, user.roles);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(balance, user.balance) && Objects.equals(roles, user.roles) && Objects.equals(transactions, user.transactions);
     }
 
     @Override
@@ -95,7 +104,9 @@ public class User {
         result = 31 * result + Objects.hashCode(name);
         result = 31 * result + Objects.hashCode(password);
         result = 31 * result + Objects.hashCode(email);
+        result = 31 * result + Objects.hashCode(balance);
         result = 31 * result + Objects.hashCode(roles);
+        result = 31 * result + Objects.hashCode(transactions);
         return result;
     }
 }

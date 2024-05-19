@@ -50,4 +50,14 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/user-login")
+    public ResponseEntity<?> login(@RequestBody UserDTO userLogIn) {
+        try {
+            userService.signIn(userLogIn);
+            return ResponseEntity.status(HttpStatus.OK).body("User logged in successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }
